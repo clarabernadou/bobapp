@@ -1,0 +1,63 @@
+version: '3'
+services:
+  # Service pour l'application Spring Boot (Backend)
+  backend:
+    build:
+      context: ./back
+    container_name: java-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - app-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://127.0.0.1:3306/sonarqube
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 2946
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+  # Service pour l'application Angular (Frontend)
+  frontend:
+    build:
+      context: ./front
+    container_name: angular-front
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+  # Service pour MySQL
+  db:
+    image: mysql:8.1
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: 2946
+      MYSQL_DATABASE: sonarqube
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  # Service pour SonarQube
+  sonarqube:
+    image: sonarqube:community
+    container_name: sonarqube
+    environment:
+      - SONAR_JDBC_URL=jdbc:mysql://127.0.0.1:3306/sonarqube
+      - SONAR_JDBC_USERNAME=sonar
+      - SONAR_JDBC_PASSWORD=sonar
+    ports:
+      - "9000:9000"
+    networks:
+      - sonarnet
+
+# Réseau partagé par tous les services
+networks:
+  app-network:
+
+# Volume pour persister les données de MySQL
+volumes:
+  mysql-data:
