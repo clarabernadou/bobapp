@@ -42,8 +42,7 @@ jobs:
         run: |
           cd front
           npm install
-          npx ng test --watch=false
-          ng test --code-coverage
+          npx ng test --watch=false --code-coverage
 
   build-and-push:
     runs-on: ubuntu-latest
