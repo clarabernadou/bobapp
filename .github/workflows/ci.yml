@@ -24,8 +24,8 @@ jobs:
           cd back
           mvn clean install
           mvn clean test jacoco:report
-          mkdir -p ../test-reports/backend
-          cp target/site/jacoco/index.html ../test-reports/backend/
+          mkdir -p ../test-reports/
+          cp target/site/jacoco/index.html ../test-reports/
 
   frontend-tests:
     runs-on: ubuntu-latest
@@ -44,8 +44,8 @@ jobs:
           cd front
           npm install
           npx ng test --watch=false --code-coverage
-          mkdir -p ../test-reports/frontend
-          cp -r coverage ../test-reports/frontend/
+          mkdir -p ../test-reports/
+          cp -r coverage ../test-reports/
 
   save-reports:
     runs-on: ubuntu-latest
