@@ -23,8 +23,9 @@ jobs:
         run: |
           cd back
           mvn clean install
-          mvn clean test
           mvn clean test jacoco:report
+          mkdir -p ../test-reports/backend
+          cp target/site/jacoco/index.html ../test-reports/backend/
 
   frontend-tests:
     runs-on: ubuntu-latest
@@ -43,6 +44,42 @@ jobs:
           cd front
           npm install
           npx ng test --watch=false --code-coverage
+          mkdir -p ../test-reports/frontend
+          cp -r coverage ../test-reports/frontend/
+
+  save-reports:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Upload test coverage reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          path: test-reports
+
+  publish-coverage:
+    runs-on: ubuntu-latest
+    needs: save-reports
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git for Pages
+        run: |
+          git config --local user.email "${{ secrets.USER_EMAIL }}"
+          git config --local user.name "${{ secrets.USER_NAME }}"
+
+      - name: Deploy Coverage Report to GitHub Pages
+        run: |
+          git add test-reports
+          git commit -m "Publishing coverage reports"
+          git push origin `gh-pages`
+
 
   build-and-push:
     runs-on: ubuntu-latest
