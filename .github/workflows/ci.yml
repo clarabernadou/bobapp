@@ -63,22 +63,23 @@ jobs:
 
   publish-coverage:
     runs-on: ubuntu-latest
-    needs: save-reports
+    needs: [backend-tests, frontend-tests]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Git for Pages
-        run: |
-          git config --local user.email "${{ secrets.USER_EMAIL }}"
-          git config --local user.name "${{ secrets.USER_NAME }}"
+      - name: Upload JaCoCo Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-coverage-report
+          path: back/target/site/jacoco/*.html
 
-      - name: Deploy Coverage Report to GitHub Pages
-        run: |
-          git add test-reports
-          git commit -m "Publishing coverage reports"
-          git push origin `gh-pages`
+      - name: Upload Angular Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-coverage-report
+          path: front/coverage/**
 
 
   build-and-push:
