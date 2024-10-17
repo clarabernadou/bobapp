@@ -49,9 +49,11 @@ jobs:
             -Dsonar.sources=back/src/main/java/com/openclassrooms/bobapp,front/src/
             -Dsonar.tests=back/src/test/java/com/openclassrooms/bobapp,front/src/app
             -Dsonar.test.inclusions=front/src/app/**/*.spec.ts
-            -Dsonar.jacoco.reportPaths=back/target/jacoco.exec
+            -Dsonar.coverage.jacoco.xmlReportPaths=back/target/site/jacoco/jacoco.xml
             -Dsonar.java.binaries=back/target/classes
             -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/target/**
+            -Dsonar.java.libraries=back/target/**/*.jar
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
