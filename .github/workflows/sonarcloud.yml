@@ -46,9 +46,12 @@ jobs:
           args: >
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} 
             -Dsonar.organization=${{ secrets.SONAR_ORG }} 
-            -Dsonar.sources=back/src/main/java/com/openclassrooms/bobapp,front/src/app
-            -Dsonar.tests=back/src/test/java/com/openclassrooms/bobapp,front/src/app/**/*.spec.ts
+            -Dsonar.sources=back/src/main/java/com/openclassrooms/bobapp,front/src/
+            -Dsonar.tests=back/src/test/java/com/openclassrooms/bobapp,front/src/app
+            -Dsonar.test.inclusions=front/src/app/**/*.spec.ts
             -Dsonar.jacoco.reportPaths=back/target/jacoco.exec
+            -Dsonar.java.binaries=back/target/classes
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/target/**
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
